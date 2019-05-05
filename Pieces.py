@@ -42,10 +42,14 @@ class Slideable(Piece):
         result = []
 
         for move_dir in move_dirs:
-            move = [self.pos[0] + move_dir[0], self.pos[1] - move_dir[1]]
-            while board.can_move(self.color, move):
-                result.append(move)
-                move = [self.pos[0] + move_dir[0], self.pos[1] - move_dir[1]]
+            move = [self.pos[0] + move_dir[0], self.pos[1] + move_dir[1]]
+            piece_found = None
+
+            while not piece_found:
+                piece_found = board.piece_at(move)
+                if not piece_found or piece_found.color != self.color:
+                    result.append(move)
+                move = [move[0] + move_dir[0], move[1] + move_dir[1]]
 
         return result
 
@@ -82,3 +86,9 @@ class Pawn(Piece):
     def __init__(self, board, color, pos):
         Piece.__init__(self, board, color, pos)
         self.symbol = SYMBOLS[color + " P"]
+
+    def moves(self):
+        return [[2, 0]]
+
+    def valid_moves(self):
+        return self.moves()

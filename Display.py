@@ -2,13 +2,16 @@ from Cursor import Cursor
 
 class Display:
     def __init__(self, board):
-        # self.cursor = Cursor()
         self.board = board
         self.cursor = Cursor(board)
 
     def render(self):
-        for row in self.board.rows:
+        for i in range(8):
             row_display = ''
-            for piece in row:
-                row_display += " " + piece.symbol + " "
+            for j in range(8):
+                if self.cursor.current_pos == [i, j]:
+                    row_display += " ! "
+                else:
+                    piece = self.board.rows[i][j]
+                    row_display += " " + piece.symbol + " "
             print row_display

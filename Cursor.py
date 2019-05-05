@@ -35,11 +35,12 @@ class Cursor:
 
     def handle_input(self):
         input = KEYMAP[self.user_input()]
-        if MOVES[input]:
+        print input
+        if input in MOVES.keys():
             self.update_current_pos(MOVES[input])
             return None
-        elif input == "space" or input == "return":
-            print self.current_po
+        elif input == "space":
+            print("whore")
             return self.current_pos
 
     def update_current_pos(self, shift):
@@ -48,5 +49,8 @@ class Cursor:
             self.current_pos = new_pos
 
     def user_input(self):
-        input = raw_input("choose something:")
+        try:
+            input = raw_input()
+        except:
+            "Invalid key press"
         return input
