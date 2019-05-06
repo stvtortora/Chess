@@ -4,8 +4,18 @@ class Board:
     def __init__(self):
         self.initialize_rows()
 
-    def check_mate(self, player):
-        return False
+    def mate(self, color):
+        for row in self.rows:
+            for piece in row:
+                if piece.color == color and len(piece.valid_moves()) > 0:
+                    print(piece.pos)
+                    print(piece.valid_moves())
+                    return False, False
+        check_mate = self.in_check(color)
+        stale_mate = not check_mate
+        return check_mate, stale_mate
+
+
 
     def king_pos(self, color):
         for row, i in zip(self.rows, range(8)):
@@ -16,10 +26,7 @@ class Board:
 
     def in_check(self, color):
         king_row, king_col = self.king_pos(color)
-        # print(self.king_pos(color))
         opponent = "white" if color == "black" else "black"
-        print(color)
-        print(opponent)
         for row in self.rows:
             for piece in row:
                 if piece.color == opponent:
@@ -65,9 +72,8 @@ class Board:
         if turn_color != piece_at_start.color:
             print("Thats not your piece")
             return False
-        v_moves = piece_at_start.valid_moves()
-        if end_pos in v_moves:
-            print(v_moves)
+
+        if end_pos in piece_at_start.valid_moves():
             self.move_piece(start_pos, end_pos)
             return True
 
