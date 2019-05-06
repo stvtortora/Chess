@@ -43,12 +43,9 @@ class Cursor:
 
     def update_current_pos(self, shift):
         new_pos = [self.current_pos[0] + shift[0], self.current_pos[1] + shift[1]]
-        if self.board.valid_pos(new_pos):
+        if self.board.on_board(new_pos):
             self.current_pos = new_pos
 
     def user_input(self):
-        try:
-            input = raw_input()
-        except:
-            "Invalid key press"
-        return input
+        i = input()
+        return i

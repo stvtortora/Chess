@@ -38,7 +38,6 @@ class Piece(object):
         self.pos = pos
 
     def valid_moves(self):
-        print self.moves()
         return self.moves()
 
     # def valid_moves(self):
@@ -47,6 +46,9 @@ class NullPiece(Piece):
     def __init__(self, board):
         Piece.__init__(self, board, None, None)
         self.symbol = ' '
+        
+    def moves(self):
+        return []
 
 class Stepable(Piece):
     def __init__(self, board, color, pos, move_dirs):
@@ -60,16 +62,26 @@ class Slideable(Piece):
 
     def moves(self):
         result = []
+        start_row, start_col = self.pos
 
-        for move_dir in move_dirs:
-            move = [self.pos[0] + move_dir[0], self.pos[1] + move_dir[1]]
+        for move_dir in self.move_dirs:
+            row_dir, col_dir = move_dir
+            move = [start_row + row_dir, start_col + col_dir]
+
             piece_found = None
+            still_on_board = True
 
-            while not piece_found:
-                piece_found = board.piece_at(move)
+            while not piece_found and still_on_board:
+                piece_found = self.board.piece_at(move)
+
                 if not piece_found or piece_found.color != self.color:
-                    result.append(move)
-                move = [move[0] + move_dir[0], move[1] + move_dir[1]]
+                    still_on_board = self.board.on_board(move)
+
+                    if still_on_board:
+                        result.append(move)
+                        prev_row, prev_col = move
+                        move = [prev_row + row_dir, prev_col + col_dir]
+
 
         return result
 
@@ -116,16 +128,14 @@ class Pawn(Piece):
         return -1
 
     def at_start_pos(self):
-        if self.color == "white":
-            return self.pos[0] == 1
-        return self.pos[0] == 6
+        return self.pos[0] == 1 if self.color == "white" else self.pos[0] == 6
 
     def can_attack(self, pos):
-        piece_to_attack_color = self.board.piece_at(pos).color
-        return self.board.valid_pos(pos) and piece_to_attack_color and piece_to_attack_color != self.color
+        piece_to_attack = self.board.piece_at(pos)
+        return piece_to_attack and piece_to_attack.color != self.color
 
-    def can_move_to(self, pos):
-        return bool(self.board.piece_at(pos).color)
+    def can_forward_step_to(self, pos):
+        return not self.board.piece_at(pos) and self.board.on_board(pos)
 
     def attack_moves(self):
         row, col = self.pos
@@ -137,4 +147,4 @@ class Pawn(Piece):
         forward_pos = [[row + self.forward_step(), col]]
         if self.at_start_pos():
             forward_pos.append([row + self.forward_step() * 2, col])
-        return list(filter(lambda pos: self.can_move_to(pos), forward_pos))
+        return list(filter(lambda pos: self.can_forward_step_to(pos), forward_pos))

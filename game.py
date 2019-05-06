@@ -22,13 +22,10 @@ class Game:
             if move_successful:
                 self.swap_turn()
 
-        print ("{current} is checkmated")
+        print("{current} is checkmated")
 
     def swap_turn(self):
-        if self.current_player == "white":
-            self.current_player = "black"
-        else:
-            self.current_player = "white"
+        self.current_player = "black" if self.current_player == "white" else "white"
 
 
 
