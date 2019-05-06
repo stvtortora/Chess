@@ -20,7 +20,7 @@ DIAGONAL_DIRS = [
     [1, 1]
 ]
 
-KNIGHT_DIRS =     [
+KNIGHT_MOVES =     [
     [-2, -1],
     [-1, -2],
     [-2, 1],
@@ -37,23 +37,41 @@ class Piece(object):
         self.board = board
         self.pos = pos
 
-    def valid_moves(self):
-        return self.moves()
+    def is_safe_move(self, move):
+        board_clone = self.board.clone()
+        board_clone.move_piece(self.pos, move)
+        return not board_clone.in_check(self.color)
 
-    # def valid_moves(self):
-    #     return
+    def valid_moves(self):
+        return list(filter(lambda move: self.is_safe_move(move), self.moves()))
+
 class NullPiece(Piece):
-    def __init__(self, board):
-        Piece.__init__(self, board, None, None)
+    def __init__(self, board, color=None, pos=None):
+        Piece.__init__(self, board, color, pos)
         self.symbol = ' '
-        
+
     def moves(self):
         return []
 
 class Stepable(Piece):
-    def __init__(self, board, color, pos, move_dirs):
+    def __init__(self, board, color, pos, step_options):
         Piece.__init__(self, board, color, pos)
-        self.move_dirs = move_dirs
+        self.step_options = step_options
+
+    def moves(self):
+        def move(step):
+            row_step, col_step = step
+            return [start_row + row_step, start_col + col_step]
+
+        def is_valid_move(move):
+            if self.board.on_board(move):
+                piece_found = self.board.piece_at(move)
+                return not piece_found or piece_found.color != self.color
+            return False
+
+        start_row, start_col = self.pos
+        move_options = [move(step_option) for step_option in self.step_options]
+        return list(filter(lambda move: is_valid_move(move), move_options))
 
 class Slideable(Piece):
     def __init__(self, board, color, pos, move_dirs):
@@ -82,7 +100,6 @@ class Slideable(Piece):
                         prev_row, prev_col = move
                         move = [prev_row + row_dir, prev_col + col_dir]
 
-
         return result
 
 class Rook(Slideable):
@@ -106,7 +123,7 @@ class Queen(Slideable):
 
 class Knight(Stepable):
         def __init__(self, board, color, pos):
-            Stepable.__init__(self, board, color, pos, KNIGHT_DIRS)
+            Stepable.__init__(self, board, color, pos, KNIGHT_MOVES)
             self.symbol = SYMBOLS[color + " N"]
 
 class King(Stepable):

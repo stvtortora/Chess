@@ -2,15 +2,58 @@ from Pieces import Knight, Rook, Bishop, Queen, King, Pawn, NullPiece
 
 class Board:
     def __init__(self):
-        self = self
         self.initialize_rows()
 
     def check_mate(self, player):
         return False
 
+    def king_pos(self, color):
+        for row, i in zip(self.rows, range(8)):
+            for piece, j in zip(row, range(8)):
+                if isinstance(piece, King) and piece.color == color:
+                    return i, j
+        return None
+
+    def in_check(self, color):
+        king_row, king_col = self.king_pos(color)
+        # print(self.king_pos(color))
+        opponent = "white" if color == "black" else "black"
+        print(color)
+        print(opponent)
+        for row in self.rows:
+            for piece in row:
+                if piece.color == opponent:
+                    for move in piece.moves():
+                        if move[0] == king_row and move[1] == king_col:
+                            return True
+        return False
+
     def piece_at(self, pos):
         row, col = pos
         return None if not self.on_board(pos) or not self.rows[row][col].color else self.rows[row][col]
+
+    def clone(self):
+        def row_clone(row):
+            def piece_clone(piece):
+                piece_type = type(piece)
+                return piece_type(board_clone, piece.color, None if not piece.pos else piece.pos.copy())
+
+            return [piece_clone(piece) for piece in row]
+
+        board_clone = Board()
+        board_clone.rows = [row_clone(row) for row in self.rows]
+        return board_clone
+
+    def move_piece(self, start_pos, end_pos):
+        piece_at_start = self.piece_at(start_pos)
+        piece_at_end = self.piece_at(end_pos)
+
+        self.rows[start_pos[0]][start_pos[1]] = NullPiece(self)
+        self.rows[end_pos[0]][end_pos[1]] = piece_at_start
+        piece_at_start.pos = end_pos
+
+        if piece_at_end:
+            piece_at_end.pos = None
 
     def make_move(self, start_pos, end_pos, turn_color):
         piece_at_start = self.piece_at(start_pos)
@@ -22,16 +65,10 @@ class Board:
         if turn_color != piece_at_start.color:
             print("Thats not your piece")
             return False
-
-        if end_pos in piece_at_start.valid_moves():
-            piece_at_end = self.piece_at(end_pos)
-
-            self.rows[start_pos[0]][start_pos[1]] = NullPiece(self)
-            self.rows[end_pos[0]][end_pos[1]] = piece_at_start
-            piece_at_start.pos = end_pos
-
-            if piece_at_end:
-                piece_at_end.pos = None
+        v_moves = piece_at_start.valid_moves()
+        if end_pos in v_moves:
+            print(v_moves)
+            self.move_piece(start_pos, end_pos)
             return True
 
         elif end_pos in piece_at_start.moves():

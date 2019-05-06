@@ -14,7 +14,6 @@ class HumanPlayer:
             selected_pos = self.display.cursor.handle_input()
 
             if selected_pos:
-                print(selected_pos)
                 if not start_pos:
                     start_pos = selected_pos
                 else:
