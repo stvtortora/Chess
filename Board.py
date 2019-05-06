@@ -21,7 +21,7 @@ class Board:
     def make_move(self, start_pos, end_pos, turn_color):
         piece_at_start = self.piece_at(start_pos)
 
-        if  != piece_at_start.color:
+        if turn_color != piece_at_start.color:
             print "Thats not your piece"
             return False
 

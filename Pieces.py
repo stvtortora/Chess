@@ -7,17 +7,28 @@ SYMBOLS = {
 }
 
 HORIZONTAL_AND_VERTICAL_DIRS = [
- [-1, 0],
- [0, -1],
- [0, 1],
- [1, 0]
+    [-1, 0],
+    [0, -1],
+    [0, 1],
+    [1, 0]
 ]
 
 DIAGONAL_DIRS = [
- [-1, -1],
- [-1, 1],
- [1, -1],
- [1, 1]
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1]
+]
+
+KNIGHT_DIRS =     [
+    [-2, -1],
+    [-1, -2],
+    [-2, 1],
+    [-1, 2],
+    [1, -2],
+    [2, -1],
+    [1, 2],
+    [2, 1]
 ]
 
 class Piece(object):
@@ -26,12 +37,21 @@ class Piece(object):
         self.board = board
         self.pos = pos
 
+    def valid_moves(self):
+        print self.moves()
+        return self.moves()
+
     # def valid_moves(self):
     #     return
 class NullPiece(Piece):
     def __init__(self, board):
         Piece.__init__(self, board, None, None)
         self.symbol = ' '
+
+class Stepable(Piece):
+    def __init__(self, board, color, pos, move_dirs):
+        Piece.__init__(self, board, color, pos)
+        self.move_dirs = move_dirs
 
 class Slideable(Piece):
     def __init__(self, board, color, pos, move_dirs):
@@ -72,14 +92,14 @@ class Queen(Slideable):
         self.symbol = SYMBOLS[color + " Q"]
 
 
-class Knight(Piece):
+class Knight(Stepable):
         def __init__(self, board, color, pos):
-            Piece.__init__(self, board, color, pos)
+            Stepable.__init__(self, board, color, pos, KNIGHT_DIRS)
             self.symbol = SYMBOLS[color + " N"]
 
-class King(Piece):
+class King(Stepable):
     def __init__(self, board, color, pos):
-        Piece.__init__(self, board, color, pos)
+        Stepable.__init__(self, board, color, pos, DIAGONAL_DIRS + HORIZONTAL_AND_VERTICAL_DIRS)
         self.symbol = SYMBOLS[color + " K"]
 
 class Pawn(Piece):
@@ -88,7 +108,41 @@ class Pawn(Piece):
         self.symbol = SYMBOLS[color + " P"]
 
     def moves(self):
-        return [[2, 0]]
+        return self.attack_moves() + self.forward_moves()
 
-    def valid_moves(self):
-        return self.moves()
+    def forward_step(self):
+        if self.color == "white":
+            return 1
+        else:
+            return -1
+
+    def at_start_pos(self):
+        if self.color == "white":
+            return self.pos[0] == 1
+        else:
+            return self.pos[0] == 6
+
+    def can_attack(self, pos):
+        piece_to_attack_color = self.board.piece_at(pos).color
+        if self.board.valid_pos(pos) and piece_to_attack_color and piece_to_attack_color != self.color:
+            return True
+        else:
+            return False
+
+    def can_move_to(self, pos):
+        if self.board.piece_at(pos).color:
+            return False
+        else:
+            return True
+
+    def attack_moves(self):
+        row, col = self.pos
+        attack_pos = [[row + self.forward_step(), col - 1], [row + self.forward_step(), col + 1]]
+        return list(filter(lambda pos: self.can_attack(pos), attack_pos))
+
+    def forward_moves(self):
+        row, col = self.pos
+        forward_pos = [[row + self.forward_step(), col]]
+        if self.at_start_pos():
+            forward_pos.append([row + self.forward_step() * 2, col])
+        return list(filter(lambda pos: self.can_move_to(pos), forward_pos))

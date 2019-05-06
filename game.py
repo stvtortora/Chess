@@ -18,7 +18,7 @@ class Game:
         while not self.board.check_mate(self.current_player):
             start_pos, end_pos = self.players[self.current_player].get_move()
             #this will be a move on the board and not forcing into check
-            move_successful = self.board.make_move(start_pos, end_pos, current_player)
+            move_successful = self.board.make_move(start_pos, end_pos, self.current_player)
             if move_successful:
                 self.swap_turn()
 
