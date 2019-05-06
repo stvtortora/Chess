@@ -6,12 +6,10 @@ class Display:
         self.cursor = Cursor(board)
 
     def render(self):
-        for i in range(8):
-            row_display = ''
-            for j in range(8):
-                if self.cursor.current_pos == [i, j]:
-                    row_display += " ! "
-                else:
-                    piece = self.board.rows[i][j]
-                    row_display += " " + piece.symbol + " "
-            print row_display
+        def render_row(i):
+            def render_space(j):
+                piece = self.board.rows[i][j]
+                return " ! " if self.cursor.current_pos == [i, j] else " " + piece.symbol + " "
+            return ''.join(render_space(j) for j in range(8))
+
+        print '\n'.join(render_row(i) for i in range(8))

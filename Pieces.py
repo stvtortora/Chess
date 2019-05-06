@@ -113,27 +113,19 @@ class Pawn(Piece):
     def forward_step(self):
         if self.color == "white":
             return 1
-        else:
-            return -1
+        return -1
 
     def at_start_pos(self):
         if self.color == "white":
             return self.pos[0] == 1
-        else:
-            return self.pos[0] == 6
+        return self.pos[0] == 6
 
     def can_attack(self, pos):
         piece_to_attack_color = self.board.piece_at(pos).color
-        if self.board.valid_pos(pos) and piece_to_attack_color and piece_to_attack_color != self.color:
-            return True
-        else:
-            return False
+        return self.board.valid_pos(pos) and piece_to_attack_color and piece_to_attack_color != self.color
 
     def can_move_to(self, pos):
-        if self.board.piece_at(pos).color:
-            return False
-        else:
-            return True
+        return bool(self.board.piece_at(pos).color)
 
     def attack_moves(self):
         row, col = self.pos

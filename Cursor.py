@@ -35,12 +35,10 @@ class Cursor:
 
     def handle_input(self):
         input = KEYMAP[self.user_input()]
-        print input
         if input in MOVES.keys():
             self.update_current_pos(MOVES[input])
             return None
         elif input == "space":
-            print("whore")
             return self.current_pos
 
     def update_current_pos(self, shift):
