@@ -8,9 +8,8 @@ class Board:
         for row in self.rows:
             for piece in row:
                 if piece.color == color and len(piece.valid_moves()) > 0:
-                    print(piece.pos)
-                    print(piece.valid_moves())
                     return False, False
+
         check_mate = self.in_check(color)
         stale_mate = not check_mate
         return check_mate, stale_mate
@@ -39,17 +38,17 @@ class Board:
         row, col = pos
         return None if not self.on_board(pos) or not self.rows[row][col].color else self.rows[row][col]
 
-    def clone(self):
-        def row_clone(row):
-            def piece_clone(piece):
+    def copy(self):
+        def row_copy(row):
+            def piece_copy(piece):
                 piece_type = type(piece)
-                return piece_type(board_clone, piece.color, None if not piece.pos else piece.pos.copy())
+                return piece_type(board_copy, piece.color, None if not piece.pos else piece.pos.copy())
 
-            return [piece_clone(piece) for piece in row]
+            return [piece_copy(piece) for piece in row]
 
-        board_clone = Board()
-        board_clone.rows = [row_clone(row) for row in self.rows]
-        return board_clone
+        board_copy = Board()
+        board_copy.rows = [row_copy(row) for row in self.rows]
+        return board_copy
 
     def move_piece(self, start_pos, end_pos):
         piece_at_start = self.piece_at(start_pos)

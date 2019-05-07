@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+
 SYMBOLS = {
   'white R': u'♜', 'white N': u'♞', 'white B': u'♝', 'white Q': u'♛',
   'white K': u'♚', 'white P': u'♟', 'black R': u'♖', 'black N': u'♘',
@@ -44,9 +45,9 @@ class Piece(object):
 
     def valid_moves(self):
         def is_valid_move(move):
-            board_clone = self.board.clone()
-            board_clone.move_piece(self.pos, move)
-            return not board_clone.in_check(self.color)
+            board_copy = self.board.copy()
+            board_copy.move_piece(self.pos, move)
+            return not board_copy.in_check(self.color)
 
         return list(filter(lambda move: is_valid_move(move), self.moves()))
 
@@ -82,17 +83,18 @@ class Slideable(Piece):
         start_row, start_col = self.pos
 
         for move_dir in self.move_dirs:
-            move = self.pos
             row_dir, col_dir = move_dir
+            move = self.pos
             can_continue = True
 
             while can_continue:
                 prev_row, prev_col = move
                 move = [prev_row + row_dir, prev_col + col_dir]
 
-                if self.can_move_to(move):
+                can_move = self.can_move_to(move)
+                if can_move:
                     result.append(move)
-                else:
+                if not can_move or bool(self.board.piece_at(move)):
                     can_continue = False
 
         return result
@@ -143,7 +145,6 @@ class Pawn(Piece):
         def can_attack(pos):
             piece_to_attack = self.board.piece_at(pos)
             return piece_to_attack and piece_to_attack.color != self.color
-
         row, col = self.pos
         attack_pos = [[row + self.forward_step(), col - 1], [row + self.forward_step(), col + 1]]
         return list(filter(lambda pos: can_attack(pos), attack_pos))

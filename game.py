@@ -1,6 +1,7 @@
 from Board import Board
 from Display import Display
 from HumanPlayer import HumanPlayer
+from ComputerPlayer import ComputerPlayer
 
 class Game:
     def __init__(self):
@@ -9,7 +10,7 @@ class Game:
         self.display = Display(self.board)
         self.players = {
             "white": HumanPlayer("white", self.display),
-            "black": HumanPlayer("black", self.display)
+            "black": ComputerPlayer("black", self.display)
         }
         self.current_player = "white"
 
@@ -22,8 +23,8 @@ class Game:
             if move_successful:
                 self.swap_turn()
                 check_mate, stale_mate = self.board.mate(self.current_player)
-                print(check_mate)
 
+        self.display.render()
         print(f'{self.current_player} is {"checkmated" if check_mate else "stalemated"}')
 
     def swap_turn(self):
