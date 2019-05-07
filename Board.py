@@ -3,7 +3,7 @@ from Pieces import Knight, Rook, Bishop, Queen, King, Pawn, NullPiece
 class Board:
     def __init__(self):
         self.initialize_rows()
-
+        
     def mate(self, color):
         for row in self.rows:
             for piece in row:
@@ -13,8 +13,6 @@ class Board:
         check_mate = self.in_check(color)
         stale_mate = not check_mate
         return check_mate, stale_mate
-
-
 
     def king_pos(self, color):
         for row, i in zip(self.rows, range(8)):
@@ -29,7 +27,7 @@ class Board:
         for row in self.rows:
             for piece in row:
                 if piece.color == opponent:
-                    for move in piece.valid_moves():
+                    for move in piece.moves():
                         if move[0] == king_row and move[1] == king_col:
                             return True
         return False
