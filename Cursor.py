@@ -41,7 +41,7 @@ class Cursor:
         self.board = board
 
     def handle_input(self):
-        key_press = input() if os.name == 'nt' else getch.getch()
+        key_press = msvcrt.getch() if os.name == 'nt' else getch.getch()
 
         if key_press in key_map:
             action = key_map[key_press]
