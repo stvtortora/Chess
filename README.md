@@ -1,8 +1,8 @@
-#Chess
+# Chess
 
 This terminal-based chess game allows humans to play against a computer player.
 
-#Instructions
+## Instructions
 
 To play, begin by cloning this repo and navigating into it via terminal.
 
