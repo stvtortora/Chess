@@ -29,7 +29,7 @@ class Board:
         for row in self.rows:
             for piece in row:
                 if piece.color == opponent:
-                    for move in piece.moves():
+                    for move in piece.valid_moves():
                         if move[0] == king_row and move[1] == king_col:
                             return True
         return False
