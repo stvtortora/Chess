@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 SYMBOLS = {
-  'white R': u'♜', 'white N': u'♞', 'white B': u'♝', 'white Q': u'♛',
-  'white K': u'♚', 'white P': u'♟', 'black R': u'♖', 'black N': u'♘',
-  'black B': u'♗', 'black Q': u'♕', 'black K': u'♔', 'black P': u'♙'
+  'solid R': u'♜', 'solid N': u'♞', 'solid B': u'♝', 'solid Q': u'♛',
+  'solid K': u'♚', 'solid P': u'♟', 'clear R': u'♖', 'clear N': u'♘',
+  'clear B': u'♗', 'clear Q': u'♕', 'clear K': u'♔', 'clear P': u'♙'
 }
 
 HORIZONTAL_AND_VERTICAL_DIRS = [
@@ -137,7 +137,7 @@ class Pawn(Piece):
         return self.attack_moves() + self.forward_moves()
 
     def forward_step(self):
-        if self.color == "white":
+        if self.color == "solid":
             return 1
         return -1
 
@@ -151,7 +151,7 @@ class Pawn(Piece):
 
     def forward_moves(self):
         def at_start_pos():
-            return self.pos[0] == 1 if self.color == "white" else self.pos[0] == 6
+            return self.pos[0] == 1 if self.color == "solid" else self.pos[0] == 6
 
         def can_forward_step_to(pos):
             return not self.board.piece_at(pos) and self.board.on_board(pos)
