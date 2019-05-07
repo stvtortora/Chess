@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-
 SYMBOLS = {
   'white R': u'♜', 'white N': u'♞', 'white B': u'♝', 'white Q': u'♛',
   'white K': u'♚', 'white P': u'♟', 'black R': u'♖', 'black N': u'♘',
