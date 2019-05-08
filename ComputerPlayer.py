@@ -26,13 +26,16 @@ class ComputerPlayer(object):
             for piece in row:
                 if piece.color and piece.color == self.color:
                     result += [[piece.pos, end_pos] for end_pos in piece.valid_moves()]
+
         return result
 
     def get_move(self):
         self.display.render()
         print('Computer\'s turn')
+
         value, move = self.calculate_move(self.display.board, True, float("-inf"), float("inf"), 3)
         start_pos, end_pos = move
+
         return start_pos, end_pos
 
     def calculate_move(self, board, maximizing_player, alpha, beta, depth):
@@ -49,18 +52,22 @@ class ComputerPlayer(object):
             start_pos, end_pos = move
             board_copy = board.copy()
             board_copy.move_piece(start_pos, end_pos)
-
             move_value = self.calculate_move(board_copy, not maximizing_player, alpha, beta, depth - 1)[0]
 
             if maximizing_player:
+
                 if move_value > best_move_value:
                     best_move_value = move_value
                     best_move = move
+
                 alpha = max(alpha, move_value)
+
             if not maximizing_player:
+
                 if move_value < best_move_value:
                     best_move_value = move_value
                     best_move = move
+
                 beta = min(beta, move_value)
 
             if beta < alpha:

@@ -41,6 +41,7 @@ class Piece(object):
         if self.board.on_board(move):
             piece_found = self.board.piece_at(move)
             return not piece_found or piece_found.color != self.color
+            
         return False
 
     def valid_moves(self):
@@ -90,8 +91,8 @@ class Slideable(Piece):
             while can_continue:
                 prev_row, prev_col = move
                 move = [prev_row + row_dir, prev_col + col_dir]
-
                 can_move = self.can_move_to(move)
+
                 if can_move:
                     result.append(move)
                 if not can_move or bool(self.board.piece_at(move)):
@@ -145,6 +146,7 @@ class Pawn(Piece):
         def can_attack(pos):
             piece_to_attack = self.board.piece_at(pos)
             return piece_to_attack and piece_to_attack.color != self.color
+
         row, col = self.pos
         attack_pos = [[row + self.forward_step(), col - 1], [row + self.forward_step(), col + 1]]
         return list(filter(lambda pos: can_attack(pos), attack_pos))
@@ -158,6 +160,7 @@ class Pawn(Piece):
 
         row, col = self.pos
         forward_pos = [[row + self.forward_step(), col]]
+
         if at_start_pos():
             forward_pos.append([row + self.forward_step() * 2, col])
         return list(filter(lambda pos: can_forward_step_to(pos), forward_pos))

@@ -8,9 +8,7 @@ class HumanPlayer:
 
         while not start_pos or not end_pos:
             self.display.render()
-            space_selecor = "from" if not start_pos else "to"
-            print(self.color + "'s turn. Move " + space_selecor + " where?'")
-
+            print("Your turn. Move to where?")
             selected_pos = self.display.cursor.handle_input()
 
             if selected_pos:

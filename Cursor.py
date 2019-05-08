@@ -45,17 +45,23 @@ class Cursor:
 
         if key_press in key_map:
             action = key_map[key_press]
+
             if action in moves.keys():
                 self.update_current_pos(moves[action])
+
                 return None
+
             elif action == "space" or action == "enter":
                 return self.current_pos
+
             else:
                 return None
+
         return None
 
     def update_current_pos(self, shift):
         new_pos = [self.current_pos[0] + shift[0], self.current_pos[1] + shift[1]]
+
         if self.board.on_board(new_pos):
             self.current_pos = new_pos
 

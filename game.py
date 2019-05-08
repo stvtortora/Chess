@@ -16,6 +16,7 @@ class Game:
 
     def play(self):
         check_mate, stale_mate = False, False
+
         while not check_mate and not stale_mate:
             start_pos, end_pos = self.players[self.current_player].get_move()
             move_successful = self.board.make_move(start_pos, end_pos, self.current_player)
@@ -29,7 +30,5 @@ class Game:
 
     def swap_turn(self):
         self.current_player = "clear" if self.current_player == "solid" else "solid"
-
-
 
 Game().play()

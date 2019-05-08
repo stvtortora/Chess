@@ -3,7 +3,7 @@ from Pieces import Knight, Rook, Bishop, Queen, King, Pawn, NullPiece
 class Board:
     def __init__(self):
         self.initialize_rows()
-        
+
     def mate(self, color):
         for row in self.rows:
             for piece in row:
@@ -19,6 +19,7 @@ class Board:
             for piece, j in zip(row, range(8)):
                 if isinstance(piece, King) and piece.color == color:
                     return i, j
+
         return None
 
     def in_check(self, color):
@@ -30,6 +31,7 @@ class Board:
                     for move in piece.moves():
                         if move[0] == king_row and move[1] == king_col:
                             return True
+
         return False
 
     def piece_at(self, pos):
@@ -41,7 +43,6 @@ class Board:
             def piece_copy(piece):
                 piece_type = type(piece)
                 return piece_type(board_copy, piece.color, None if not piece.pos else piece.pos.copy())
-
             return [piece_copy(piece) for piece in row]
 
         board_copy = Board()
