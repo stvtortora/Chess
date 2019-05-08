@@ -19,10 +19,10 @@ If you're on pc, install `msvcrt` instead of `getch`.
 
 Finally, run `python3 Game.py`.
 
-##Game Play
+## Game Play
 Each player takes a turn, starting with the human, followed by AI. During the human's turn, a move is arrived at by moving the cursor to select a start position and end position.
 
-###Cursor moves:
+### Cursor moves:
 `w: up`
 `s: down`
 `a: left`
