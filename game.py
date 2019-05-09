@@ -9,10 +9,10 @@ class Game:
         self.board = Board()
         self.display = Display(self.board)
         self.players = {
-            "solid": HumanPlayer("solid", self.display),
-            "clear": ComputerPlayer("clear", self.display)
+            'black': HumanPlayer('black', self.display),
+            'white': ComputerPlayer('white', self.display)
         }
-        self.current_player = "solid"
+        self.current_player = 'black'
 
     def play(self):
         check_mate, stale_mate = False, False
@@ -29,6 +29,6 @@ class Game:
         print(f'{self.current_player} is {"checkmated" if check_mate else "stalemated"}')
 
     def swap_turn(self):
-        self.current_player = "clear" if self.current_player == "solid" else "solid"
+        self.current_player = "white" if self.current_player == "black" else "black"
 
 Game().play()

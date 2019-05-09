@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-
+from termcolor import colored
 SYMBOLS = {
-  'solid R': u'♜', 'solid N': u'♞', 'solid B': u'♝', 'solid Q': u'♛',
-  'solid K': u'♚', 'solid P': u'♟', 'clear R': u'♖', 'clear N': u'♘',
-  'clear B': u'♗', 'clear Q': u'♕', 'clear K': u'♔', 'clear P': u'♙'
+  'black R': u'♜', 'black N': u'♞', 'black B': u'♝', 'black Q': u'♛',
+  'black K': u'♚', 'black P': u'♟', 'white R': u'♖', 'white N': u'♘',
+  'white B': u'♗', 'white Q': u'♕', 'white K': u'♔', 'white P': u'♙'
 }
 
 HORIZONTAL_AND_VERTICAL_DIRS = [
@@ -41,7 +41,7 @@ class Piece(object):
         if self.board.on_board(move):
             piece_found = self.board.piece_at(move)
             return not piece_found or piece_found.color != self.color
-            
+
         return False
 
     def valid_moves(self):
@@ -103,7 +103,7 @@ class Slideable(Piece):
 class Rook(Slideable):
     def __init__(self, board, color, pos):
         Slideable.__init__(self, board, color, pos, HORIZONTAL_AND_VERTICAL_DIRS)
-        self.symbol = SYMBOLS[color + " R"]
+        self.symbol = u'♖'
 
     def valid_positions(self):
         return [[1, 2]]
@@ -111,34 +111,34 @@ class Rook(Slideable):
 class Bishop(Slideable):
     def __init__(self, board, color, pos):
         Slideable.__init__(self, board, color, pos, DIAGONAL_DIRS)
-        self.symbol = SYMBOLS[color + " B"]
+        self.symbol = u'♗'
 
 class Queen(Slideable):
     def __init__(self, board, color, pos):
         Slideable.__init__(self, board, color, pos, DIAGONAL_DIRS + HORIZONTAL_AND_VERTICAL_DIRS)
-        self.symbol = SYMBOLS[color + " Q"]
+        self.symbol = u'♕'
 
 
 class Knight(Stepable):
         def __init__(self, board, color, pos):
             Stepable.__init__(self, board, color, pos, KNIGHT_MOVES)
-            self.symbol = SYMBOLS[color + " N"]
+            self.symbol = u'♘'
 
 class King(Stepable):
     def __init__(self, board, color, pos):
         Stepable.__init__(self, board, color, pos, DIAGONAL_DIRS + HORIZONTAL_AND_VERTICAL_DIRS)
-        self.symbol = SYMBOLS[color + " K"]
+        self.symbol = u'♔'
 
 class Pawn(Piece):
     def __init__(self, board, color, pos):
         Piece.__init__(self, board, color, pos)
-        self.symbol = SYMBOLS[color + " P"]
+        self.symbol = u'♙'
 
     def moves(self):
         return self.attack_moves() + self.forward_moves()
 
     def forward_step(self):
-        if self.color == "solid":
+        if self.color == "black":
             return 1
         return -1
 
@@ -153,7 +153,7 @@ class Pawn(Piece):
 
     def forward_moves(self):
         def at_start_pos():
-            return self.pos[0] == 1 if self.color == "solid" else self.pos[0] == 6
+            return self.pos[0] == 1 if self.color == "black" else self.pos[0] == 6
 
         def can_forward_step_to(pos):
             return not self.board.piece_at(pos) and self.board.on_board(pos)

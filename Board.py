@@ -24,7 +24,7 @@ class Board:
 
     def in_check(self, color):
         king_row, king_col = self.king_pos(color)
-        opponent = "solid" if color == "clear" else "clear"
+        opponent = "black" if color == "white" else "white"
         for row in self.rows:
             for piece in row:
                 if piece.color == opponent:
@@ -91,11 +91,11 @@ class Board:
 
     def fill_back_row(self, color):
         pieces = (Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook)
-        row = 0 if color == "solid" else 7
+        row = 0 if color == "black" else 7
         self.rows[row] = [self.init_piece(piece, color, [row, col]) for piece, col in zip(pieces, range(8))]
 
     def fill_front_row(self, color):
-        row = 1 if color == "solid" else 6
+        row = 1 if color == "black" else 6
         self.rows[row] = [self.init_piece(Pawn, color, [row, col]) for col in range(8)]
 
     def initialize_rows(self):
@@ -104,5 +104,5 @@ class Board:
             self.fill_front_row(color)
 
         self.rows = [[NullPiece(self)] * 8 for i in range(8)]
-        for color in ["solid", "clear"]:
+        for color in ["black", "white"]:
             fill_rows(color)
